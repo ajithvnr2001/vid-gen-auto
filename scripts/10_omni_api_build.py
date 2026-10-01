@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """10 — API alternative: same story scenes via gemini-omni-1.1-flash Interactions API.
 No browser needed. Requires GEMINI_API_KEY (Google AI Studio, billing enabled).
-Dialogues stay native Tamil; Tamil titles/voiceover are muxed in post because
-Omni on-screen Tamil text is unreliable. See DOCUMENTATION.md section 5/#10."""
+Dialogues stay in the characters' native language; titles/voiceover are muxed in
+post because Omni on-screen text in non-Latin scripts is unreliable.
+See DOCUMENTATION.md section 5/#10. Edit CHARS/SCENES for your own story."""
 import base64
 import os
 import subprocess
@@ -10,22 +11,20 @@ import sys
 from pathlib import Path
 
 MODEL = "gemini-omni-1.1-flash"
-CHARS = ("Characters (keep consistent across all clips): SELVA, a middle-aged "
-         "wealthy Tamil merchant, moustache, white dhoti, gold chain; PERIYAVAR, a "
-         "frail elderly Tamil man, white beard, torn grey clothes. "
-         "Setting: old Tamil village, South Indian temple.")
+CHARS = ("Characters (keep consistent across all clips): HERO, <age, look, clothing>; "
+         "ELDER, <age, look, clothing>. "
+         "Setting: <your location>.")
 STYLE = ("Warm cinematic realism, soft morning light, shallow depth of field, "
          "gentle camera push-in, no text, no watermark, no subtitles in frame.")
 
 SCENES = [
-    ("story1", "SELVA counts gold coins, servants nervous. SELVA says arrogantly "
-               "in Tamil, 'பணம் இருந்தால் போதும்!'. " + CHARS + " " + STYLE),
-    ("story2", "Temple entrance, incense. PERIYAVAR blesses SELVA, saying warmly in "
-               "Tamil, 'ஐயா, உங்களுக்கு நல்ல உடல்நலமும் மனமகிழ்ச்சியும் கிடைக்கட்டும்!'. "
+    ("story1", "HERO <action in location>, supporting cast nervous. HERO says "
+               "arrogantly in <language>, '<line 1>'. " + CHARS + " " + STYLE),
+    ("story2", "<Location> at morning. ELDER <action>, addressing HERO. ELDER says "
+               "warmly in <language>, '<line 2>'. " + CHARS + " " + STYLE),
+    ("story3", "ELDER says calmly in <language>, '<line 3>'. HERO, humbled, "
+               "<kind action> and says in <language>, '<line 4>'. "
                + CHARS + " " + STYLE),
-    ("story3", "PERIYAVAR says calmly in Tamil, 'உண்மையான செல்வம் அன்பான "
-               "வார்த்தைகள் தான்.'. SELVA places money into open hands, saying in "
-               "Tamil, 'இனிய சொல்லே பெரும் செல்வம்!'. " + CHARS + " " + STYLE),
 ]
 
 

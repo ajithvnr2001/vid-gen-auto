@@ -1,14 +1,13 @@
 # vid-gen-auto
 
-End-to-end Tamil moral-story video pipeline: **Google Flow + Gemini Omni 1.1 Flash**
-generation with native Tamil dialogue, driven by Playwright automation, merged in
-Scenebuilder, delivered as a 30 s story video (Thirukkural 92, *Iniya Sol*).
+End-to-end story-video automation for **Google Flow + Gemini Omni 1.1 Flash**:
+text-to-video generation with native dialogue, driven by Playwright automation,
+merged in Scenebuilder, delivered as a finished story video.
 
 ## Result
 
-`iniya_sol_30s_google_story.mp4` — 30 s, 1280×720: merchant → temple blessing →
-giving/moral, every line spoken natively in Tamil by the generated characters
-(transcription-verified, `ta @ 1.0`).
+Produces a 30 s, 1280×720 story video (opening → development → moral), every
+line spoken natively by the generated characters (transcription-verified).
 
 ## Quickstart
 
@@ -33,15 +32,15 @@ No API key path: `GEMINI_API_KEY=… python scripts/10_omni_api_build.py`
 ## Progress
 
 **Video creation is automated** ✅ — text-to-video (Omni 1.1 Flash) + video
-Ingredients + Tamil speech verification + Scenebuilder merge + download, end to
-end via `scripts/04–09`. Proven on the shipped 30 s Thirukkural story.
+Ingredients + speech verification + Scenebuilder merge + download, end to
+end via `scripts/04–09`. Proven on a shipped 30 s story build.
 
 | Flow Studio capability | Status |
 |---|---|
 | Text-to-video generation (Omni/Veo, settings, polling) | ✅ Automated (`04`) |
 | Video Ingredients attach (continuity references) | ✅ Automated (`05`) |
 | Clip download 720p via CDP | ✅ Automated (`06`) |
-| Tamil speech verification (transcription gate) | ✅ Automated (`07`) |
+| Dialogue verification (transcription gate) | ✅ Automated (`07`) |
 | Scenebuilder merge + Download scene | ✅ Automated (`08`, supervised — verify order by download) |
 | Join + deliver final file | ✅ Automated (`09`) |
 | Omni API path (no browser) | ✅ Scripted (`10`, needs `GEMINI_API_KEY`) |

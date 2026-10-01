@@ -1,11 +1,11 @@
 # vid-gen-auto — End-to-End Documentation
 
-Tamil moral-story video pipeline (Thirukkural 92, *Iniya Sol*): Google Flow + Gemini
-Omni 1.1 Flash generation with native Tamil dialogue, driven by Playwright automation,
-merged in Scenebuilder, delivered as a 30 s story video.
+General-purpose Google Flow + Gemini Omni video automation: text-to-video
+generation with native dialogue, driven by Playwright automation, merged in
+Scenebuilder, delivered as a finished story video.
 
-> What this repo is: the complete, runnable record of a real build
-> (`/data/opencode/videogen/iniya_sol_30s_google_story.mp4`).
+> What this repo is: a reusable, runnable automation package for Flow Studio
+> video pipelines (generate → reference → verify → merge → deliver).
 > What it is not: a SaaS wrapper. You run the scripts against your own Flow project.
 
 ---
@@ -13,17 +13,17 @@ merged in Scenebuilder, delivered as a 30 s story video.
 ## 1. How it was created (pipeline overview)
 
 ```
-ins.txt (story + Flow project URL + cookie URL)
+project URL + story prompts
    │
    ├─► 01_authenticate ....... cookies.txt ─► Playwright ─► Flow project (PRO account)
    │                              (fallback: shared headed-Chrome login via VNC)
-   ├─► 02_generate ........... 3 × text-to-video, Omni 1.1 Flash, 720p, 10 s, 16:9, x1
-   │       clip1: merchant + native Tamil line 1 (no ingredient)
-   │       clip2: temple blessing + native Tamil line 2 (clip1 attached as Ingredient)
-   │       clip3: giving/moral + native Tamil lines 3–4 (clip2 attached as Ingredient)
-   ├─► 03_verify ............. download each clip → faster-whisper transcription (Tamil)
+   ├─► 02_generate ........... N × text-to-video, Omni 1.1 Flash, 720p, 10 s, 16:9, x1
+   │       clip1: opening scene + native dialogue line 1 (no ingredient)
+   │       clip2: next scene + native dialogue line 2 (clip1 attached as Ingredient)
+   │       clip3: closing scene + native dialogue lines 3–4 (clip2 attached as Ingredient)
+   ├─► 03_verify ............. download each clip → transcription (dialogue language)
    ├─► 04_merge .............. Scenebuilder scene [clip1, clip2, clip3] → Download scene
-   └─► 05_deliver ............ order verified (frames + transcription) → final 30 s file
+   └─► 05_deliver ............ order verified (frames + transcription) → final video file
 ```
 
 Flow options used, end to end: **Text-to-Video → Ingredients (video reference) →
@@ -45,7 +45,7 @@ support.google.com/flow, DeepMind Omni, Gemini API docs — see §7).
 | x11vnc + websockify/noVNC + cloudflared tunnel | Remote login station | Owner opens a public URL, logs in manually once; automation then drives the live profile via CDP `:9222` |
 | `cookies.txt` (Netscape, Get-cookies.txt-Locally) | Session bootstrap attempt | Worked for loading, but Google's `g.a000…` bound sessions reject datacenter IPs — documented dead-end, kept as fallback path |
 | edge-tts (`ta-IN-PallaviNeural`) | Scratch narration only | Used for interim local cuts; **not** in the final Google-only video |
-| faster-whisper (`tiny`, CPU int8) | Speech verification | Transcribes each downloaded clip, asserts Tamil dialogue present before merging |
+| faster-whisper (`tiny`, CPU int8) | Speech verification | Transcribes each downloaded clip, asserts the expected dialogue is present before merging |
 | ffmpeg | Verification + joining | Frame extraction, duration/audio probes; final step joins the 3 verified Flow MP4s in story order |
 | Scrapling (`Fetcher`/`DynamicFetcher`) | Docs crawler attempts | Static `Fetcher` and browser-backed `DynamicFetcher` both fail on Google's JS-hydrated help center (only headings visible); crawler falls back to Playwright (same ins.txt repo family) — full fallback chain documented in `tools/crawl_flow_docs.py` |
 | Scrapegraph-ai | Evaluated, not used | LLM-driven extraction is nondeterministic + costly per run; deterministic Playwright selectors won for repeated polling |
@@ -117,20 +117,26 @@ credits than the step it is on.
 | 4 | `04_generate_clip.py` | Set model settings → fill prompt → Start → poll ≤15 min → screenshot | Force-clicks through CDK backdrops; `Video · 720p · 10s · x1 · Omni 1.1 Flash` |
 | 5 | `05_attach_ingredient.py` | Attach previous clip as video Ingredient reference | Ingredients panel → Videos tab → Recent-first asset → Add to prompt; composer chip asserted |
 | 6 | `06_download_clip.py` | Hover tile → More options → Download → 720p via CDP download path | `Browser.setDownloadBehavior`; 720p Original size menuitem |
-| 7 | `07_verify_speech.py` | Transcribe clip audio, assert Tamil dialogue | faster-whisper `tiny` CPU; language=`ta`; prints timed segments |
+| 7 | `07_verify_speech.py` | Transcribe clip audio, assert expected dialogue | faster-whisper `tiny` CPU; set `--language` to the dialogue language; prints timed segments |
 | 8 | `08_build_scene.py` | Tile ⋮ → Add to scene → New scene; + → Add clip → option-by-index → Add media; verify 30 s timeline; Download scene | Recent-sorted picker indices; per-append screenshot; timeline counter assertion |
 | 9 | `09_assemble_final.py` | Join verified clip MP4s in story order → 30 s file + `.srt` | ffmpeg concat (video+audio re-encode for clean joins); frame+transcription re-verification |
-| 10 | `10_omni_api_build.py` | API alternative: same scenes via `gemini-omni-1.1-flash` Interactions API | Needs `GEMINI_API_KEY`; Tamil titles/voiceover muxed in post |
+| 10 | `10_omni_api_build.py` | API alternative: same scenes via `gemini-omni-1.1-flash` Interactions API | Needs `GEMINI_API_KEY`; titles/voiceover muxed in post |
 
-Prompts used (English direction + verbatim Tamil dialogue — the Omni pattern for
-non-English speech; Tamil-only direction text underperforms per prompt guide):
+Prompts follow one pattern (English direction + verbatim dialogue in the target
+language — the Omni pattern for non-English speech; direction text in other
+languages underperforms per prompt guide):
 
-- **Clip 1:** merchant counts coins, says `பணம் இருந்தால் போதும்!`
-- **Clip 2** (clip 1 as ingredient): temple blessing, `ஐயா, உங்களுக்கு நல்ல உடல்நலமும் மனமகிழ்ச்சியும் கிடைக்கட்டும்!`
-- **Clip 3** (clip 2 as ingredient): wisdom + moral, `உண்மையான செல்வம் அன்பான வார்த்தைகள் தான்.` + `இனிய சொல்லே பெரும் செல்வம்!`
+- **Clip 1:** opening scene, character speaks dialogue line 1 (no ingredient)
+- **Clip 2** (clip 1 as ingredient): next scene, character speaks dialogue line 2
+- **Clip 3** (clip 2 as ingredient): closing scene, dialogue lines 3–4
 
-Verified transcriptions of the delivered file (faster-whisper, `ta @ 1.0`):
-`0–10 s: பணம்…`, `10–20 s: உங்களுக்கு மகிழ்ச்சி…`, `20–30 s: உண்மையான செல்வம்… + இனிய சொல்லே…`.
+Example skeleton: `Wide static shot, one continuous take, photorealistic
+<setting>. <CHARACTER>, <description>, <action>. <CHARACTER> says in
+<language>, '<your line here>'. No music, realistic room sound. No text
+on screen.`
+
+Verification transcribes each downloaded clip in the dialogue language and
+asserts the expected lines are present before merging (see `07_verify_speech.py`).
 
 ---
 
@@ -168,7 +174,7 @@ History panel keeps every version + prompt; Save to Project reuses versions.
 
 **Characters/Avatar/Tools/Collections:** `@Name` mentions, `@me` avatar, custom
 Tools builder, Collection folders — catalogued from docs, not required for a
-3-clip fable.
+3-clip story.
 
 **Scenebuilder:** tile ⋮ → Add to scene → New scene/append; + → Add clip →
 Recent-sorted picker → Add media appends at END; timeline counter (00:30:00
