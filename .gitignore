@@ -1,0 +1,13 @@
+# runtime + secrets (never commit)
+cookies.txt
+*.cookies.txt
+remote/chrome-profile/
+downloads/
+clips/
+shots/
+*.mp4
+*.m4a
+*.mp3
+*.png
+__pycache__/
+.noVNC_token

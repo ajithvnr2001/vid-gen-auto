@@ -1,0 +1,5 @@
+playwright>=1.40
+scrapling[fetchers]>=0.3
+faster-whisper>=1.0
+edge-tts>=7.0
+google-genai>=2.10.0
