@@ -57,6 +57,12 @@ end via `scripts/04–09`. Proven on a shipped 30 s story build.
 | Flow Agent batch variations | ⏳ Pending automation |
 | Collections / Tools builder / Keyboard flows | ⏳ Pending automation |
 | 1080p/4K upscale + YouTube publish | ⏳ Pending automation |
+| Omni 360p draft mode (half cost) + free upscale | ⏳ Pending automation |
+| Veo model matrix (Lite/Fast/Quality feature splits) | ⏳ Pending automation |
+| Veo 2-era modes (Camera Control, Jump To, Insert/remove) | ⏳ Pending (may be deprecated in UI) |
+| Veo 3.1 experimental audio (SFX/speech) | ⏳ Pending automation |
+| Omni Extend (listed "coming soon") | ⏳ Blocked by Google, re-check later |
+| Flow Music / mobile apps / Shorts entry points | ⏳ Out of scope (catalogued in DOCUMENTATION.md §6) |
 
 ## Contents
 

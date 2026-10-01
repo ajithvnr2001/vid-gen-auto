@@ -164,8 +164,11 @@ hover → **Save frame** produces reusable ingredients. (Evaluated; video-ingred
 attach gave equivalent continuity with fewer steps.)
 
 **Extend:** `Extend (Veo 3.1 - Lite)` — **disabled for Omni clips** (docs: "You can
-currently only extend Veo generated videos"). Dead end for this pipeline; noted
-so nobody retries it.
+currently only extend Veo generated videos"; Omni Extend is now listed as
+"coming soon"). Dead end for this pipeline today; noted so nobody retries it.
+Veo rule learned from the matrix: any Veo 3.1 8 s clip extends, but the
+extension run itself must use Veo 3.1 Lite; Fast/Quality cannot extend, Quality
+cannot do Ingredients, Lite cannot do Video-to-Video edit.
 
 **Edit (Omni):** upload ≤60 s/1 GB (trim ≤30 s) → select ≤10 s segment → prompt +
 optional ingredients → Generate; up to 3 conversational turns keep context.
@@ -182,9 +185,20 @@ asserted); trim handles; **drag reorder works but is coordinate-fragile — veri
 by downloading, never trust the filmstrip alone**; Download scene → 720p file.
 Scene tile shows clip-count badge; Bin holds deleted scenes (restorable).
 
-**Credits/regions/safety:** per-generation costs (Omni 720p ≈ 15 cr per 10 s);
-free 50/day with peak blackout ~14:00–17:00 UTC; some voice/frame features are
-region-gated; uploads pass safety checks; all outputs carry SynthID + C2PA.
+**Credits/regions/safety:** per-generation costs (Omni 720p ≈ 15 cr per 10 s;
+Omni 360p draft ≈ half cost; free 360p→720p upscale on Pro/Ultra; 1080p free on
+Plus/Pro/Ultra; 4K Ultra-only ≈ 50 cr); free 50/day with peak blackout
+~14:00–17:00 UTC; some voice/frame features are region-gated; uploads pass
+safety checks; all outputs carry SynthID + C2PA.
+
+**Adjacent surfaces (catalogued, out of pipeline scope):** Veo 2-era modes
+(Camera Control, Jump To, Insert/remove object); experimental Veo 3.1 audio
+(SFX/speech-in-prompt, muted on minors, subtitle-triggering bug, refund on
+failure); Flow Music (Lyria songs, section edit, covers, Omni music videos);
+mobile apps (Flow Android beta 18+, Flow Music iOS); YouTube Shorts Remix +
+Create app (free Omni entry); Gemini-app conversational Omni (zooms, background
+swaps); Flow Agent project organization (collections, renames); Tools
+create/remix/share (subscribers).
 
 ---
 
