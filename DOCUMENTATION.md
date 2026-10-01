@@ -47,7 +47,7 @@ support.google.com/flow, DeepMind Omni, Gemini API docs — see §7).
 | edge-tts (`ta-IN-PallaviNeural`) | Scratch narration only | Used for interim local cuts; **not** in the final Google-only video |
 | faster-whisper (`tiny`, CPU int8) | Speech verification | Transcribes each downloaded clip, asserts Tamil dialogue present before merging |
 | ffmpeg | Verification + joining | Frame extraction, duration/audio probes; final step joins the 3 verified Flow MP4s in story order |
-| Scrapling (`Fetcher`) | Docs crawler | TLS-impersonating HTTP fetcher; used to crawl all 15 Flow help articles + Omni/API docs into `docs/flow/` |
+| Scrapling (`Fetcher`/`DynamicFetcher`) | Docs crawler attempts | Static `Fetcher` and browser-backed `DynamicFetcher` both fail on Google's JS-hydrated help center (only headings visible); crawler falls back to Playwright (same ins.txt repo family) — full fallback chain documented in `tools/crawl_flow_docs.py` |
 | Scrapegraph-ai | Evaluated, not used | LLM-driven extraction is nondeterministic + costly per run; deterministic Playwright selectors won for repeated polling |
 | Gemini API / `GEMINI_API_KEY` | Optional fast path | `omni_flow_build.py` generates the same scenes via Interactions API when a key exists (no browser needed) |
 
@@ -75,7 +75,7 @@ Chrome stable was installed from `dl.google.com` for the login station.
 
 - Automation never stores passwords. It either injects `cookies.txt` into a fresh
   context (`scripts/01_cookies_probe.py`) or attaches to the live profile where the
-  owner already logged in (`scripts/02_live_session.py` pattern — CDP attach).
+  owner already logged in (`scripts/02_remote_login_station.sh` sets it up; CDP attach).
 - Downloads are routed via CDP `Browser.setDownloadBehavior` to a local folder so
   generated MP4s land on disk without a save dialog.
 - Every destructive/expensive step (generation ≈ 15 credits per 10 s Omni clip,
@@ -120,7 +120,7 @@ credits than the step it is on.
 | 7 | `07_verify_speech.py` | Transcribe clip audio, assert Tamil dialogue | faster-whisper `tiny` CPU; language=`ta`; prints timed segments |
 | 8 | `08_build_scene.py` | Tile ⋮ → Add to scene → New scene; + → Add clip → option-by-index → Add media; verify 30 s timeline; Download scene | Recent-sorted picker indices; per-append screenshot; timeline counter assertion |
 | 9 | `09_assemble_final.py` | Join verified clip MP4s in story order → 30 s file + `.srt` | ffmpeg concat (video+audio re-encode for clean joins); frame+transcription re-verification |
-| 10 | `omni_flow_build.py` | API alternative: same scenes via `gemini-omni-1.1-flash` Interactions API | Needs `GEMINI_API_KEY`; Tamil titles/voiceover muxed in post |
+| 10 | `10_omni_api_build.py` | API alternative: same scenes via `gemini-omni-1.1-flash` Interactions API | Needs `GEMINI_API_KEY`; Tamil titles/voiceover muxed in post |
 
 Prompts used (English direction + verbatim Tamil dialogue — the Omni pattern for
 non-English speech; Tamil-only direction text underperforms per prompt guide):
@@ -186,8 +186,8 @@ region-gated; uploads pass safety checks; all outputs carry SynthID + C2PA.
 
 `docs/flow/*.md` — all 15 Flow help articles + Omni prompt guide + Gemini
 prompting intro + cloud video overview, fetched with
-`tools/crawl_flow_docs.py` (Scrapling `Fetcher`). Each file keeps its source
-URL header. Start with `docs/flow/00_INDEX.md`.
+`tools/crawl_flow_docs.py` (Scrapling attempted first; Playwright fallback wins —
+see file header). Each file keeps its source URL header. Start with `docs/flow/00_INDEX.md`.
 
 `docs/repos.md` — what each ins.txt reference repo contributed:
 Get-cookies.txt-Locally (Netscape format + load mapping), Scrapling (crawler +
