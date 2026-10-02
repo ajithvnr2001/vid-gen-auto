@@ -62,6 +62,7 @@ end via `scripts/04–09`. Proven on a shipped 30 s story build.
 | Veo 2-era modes (Camera Control, Jump To, Insert/remove) | ⏳ Pending (may be deprecated in UI) |
 | Veo 3.1 experimental audio (SFX/speech) | ⏳ Pending automation |
 | Omni Extend (listed "coming soon") | ⏳ Blocked by Google, re-check later |
+| Omni-only extension workarounds (frame chaining, ingredient chaining, conversational continuation, merge) | ✅ Documented + scripted (`11`, DOCUMENTATION.md §6) — awaiting your go to run |
 | Flow Music / mobile apps / Shorts entry points | ⏳ Out of scope (catalogued in DOCUMENTATION.md §6) |
 
 ## Contents

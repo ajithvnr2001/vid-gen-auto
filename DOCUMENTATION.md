@@ -170,6 +170,30 @@ Veo rule learned from the matrix: any Veo 3.1 8 s clip extends, but the
 extension run itself must use Veo 3.1 Lite; Fast/Quality cannot extend, Quality
 cannot do Ingredients, Lite cannot do Video-to-Video edit.
 
+**Omni-only extension workarounds (no Veo needed):** since native Extend is
+Veo-only, long-form Omni video is built by chaining — ranked by seamlessness:
+1. **Last-frame chaining (closest to true Extend).** Omni supports Frames →
+   First/First+Last at all lengths incl. 10 s: pause clip N on its last frame →
+   **Save frame** → start clip N+1 with that frame + `continue the action: …`
+   prompt. The next clip starts on the previous clip's last pixels, so joins are
+   near-invisible. Describe 1–2 s of overlap and trim it with Scenebuilder
+   handles. Repeat indefinitely — no length cap.
+2. **Ingredient-reference chaining.** Attach the finished clip as a video
+   Ingredient (`same characters, same style, continuous action`). Weaker
+   frame-accuracy than start-frames, stronger identity/wardrobe continuity.
+   Best combined with (1) in one generation: start-frame for motion + ingredient
+   for character consistency.
+3. **Conversational continuation.** Omni keeps context across turns (API:
+   `previous_interaction_id`; Flow: edit flow on generated clips, ≤3 turns).
+   `Continue the shot: …` yields a grounded continuation clip.
+4. **Scenebuilder merge.** Merge chained clips into scenes, scenes into longer
+   sequences. Extend only ever added one segment; chaining + merging has no cap.
+Recommended recipe: 10 s clip → Save frame (last) → Frames-to-Video with that
+frame + continuation prompt + previous clip as ingredient + same dialogue
+pattern → verify speech → repeat → merge → download. Automated in
+`scripts/11_frame_chained_continuation.py`. When native Omni Extend ships it
+drops into the same slot.
+
 **Edit (Omni):** upload ≤60 s/1 GB (trim ≤30 s) → select ≤10 s segment → prompt +
 optional ingredients → Generate; up to 3 conversational turns keep context.
 History panel keeps every version + prompt; Save to Project reuses versions.
