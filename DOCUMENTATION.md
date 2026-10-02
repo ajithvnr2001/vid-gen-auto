@@ -88,9 +88,10 @@ Chrome stable was installed from `dl.google.com` for the login station.
 
 1. **Google account with a PRO (or better) AI plan.** Free tier blocks video at
    peak hours and has no 10 s Omni quota worth relying on.
-2. **Login, once.** Open the remote noVNC URL (or run Chrome locally with
-   `--remote-debugging-port=9222`), sign in, complete any phone verification,
-   open your Flow project. Automation takes over from there.
+2. **Login, once — manual or scripted.** Either sign in by hand in the noVNC
+   browser, or run `GOOGLE_EMAIL=… GOOGLE_PASSWORD='…' python scripts/00_login.py`
+   and approve the phone challenge. Credentials live only in env, are never
+   logged, screenshotted, or committed. Automation takes over from there.
 3. **Fresh `cookies.txt` (optional fallback).** Export via Get-cookies.txt-Locally
    and use within minutes; cross-machine reuse usually fails — prefer step 2.
 4. **Credits.** Budget ≈ 15 credits × number of 10 s Omni clips (3 clips ≈ 45).
