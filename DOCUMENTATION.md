@@ -242,7 +242,28 @@ SPA wait/hydration rules, CDP download routing).
 
 ---
 
-## 8. Verification & troubleshooting
+## 8. Robust generation patterns (hardened multi-clip runs)
+
+These guards were added after real failures; `scripts/12_batch_generate.py`
+implements all of them. Always start a story with `docs/story_treatment_template.md`.
+
+- **Settings lock with read-back.** Set Video/10s/x1/16:9/720p + model, then READ
+  the Settings-trigger text back; retry ≤4×; abort before Start if `10s`+`x1`
+  won't stick. Without this, runs silently fall back to image mode (Nano Banana
+  stills) or 8s-x2 and burn credits on the wrong artifact.
+- **Model must be re-verified every run.** The composer resets to the image model
+  and to 8s-x2 between sessions. Never assume yesterday's settings persisted.
+- **Render watcher, not text matcher.** Completion = pending-tile `NN%` gone AND
+  no Failed tile. Matching prompt/aria text causes false "done" signals (the
+  prompt text itself matches).
+- **Failure-tile retry.** `Failed. Generation timed out… not charged` is transient
+  — retry the identical prompt once instead of rewriting it.
+- **Duplicate asset names.** The picker lists by Recent; same-titled assets need
+  index selection after a thumbnail screenshot, or a rename first.
+- **Treatment-first.** Character bible + scene table + expected transcription
+  lines are written before any generation; prompts derive from it verbatim.
+
+## 9. Verification & troubleshooting
 
 - **Auth dead?** Project URL redirects to `/about`, or `myaccount.google.com`
   lands on marketing → session rejected cross-machine. Fix: fresh login via the

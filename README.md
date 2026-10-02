@@ -45,6 +45,8 @@ end via `scripts/04–09`. Proven on a shipped 30 s story build.
 | Join + deliver final file | ✅ Automated (`09`) |
 | Omni API path (no browser) | ✅ Scripted (`10`, needs `GEMINI_API_KEY`) |
 | Cookie login bootstrap | ✅ Scripted (`01`, usually fails cross-machine — use login station) |
+| Batch multi-clip generation (settings lock, render watch, failure retry) | ✅ Automated (`12`) |
+| Story treatment template (bible, beats, verification lines) | ✅ Template (`docs/story_treatment_template.md`) |
 | Remote login station (VNC + tunnel + CDP) | ✅ Scripted (`02`, `03`) |
 | Docs crawler (all Flow help articles) | ✅ Automated (`tools/crawl_flow_docs.py`) |
 | Frames (start/end, Save frame) | ⏳ Pending automation |
